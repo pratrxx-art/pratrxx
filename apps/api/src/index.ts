@@ -11,6 +11,7 @@ import { authRoutes } from "./routes/authRoutes.js";
 import { linkRoutes } from "./routes/linkRoutes.js";
 import { adminRoutes } from "./routes/adminRoutes.js";
 import { dashboardRoutes } from "./routes/dashboardRoutes.js";
+import { publicRoutes } from "./routes/publicRoutes.js";
 
 dotenv.config();
 export const prisma = new PrismaClient();
@@ -22,13 +23,14 @@ app.use(cors({ origin: process.env.WEB_URL, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
-app.use(rateLimit({ windowMs: 60_000, max: 100 }));
+app.use(rateLimit({ windowMs: 60_000, max: 200 }));
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/links", linkRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/public", publicRoutes);
 
 app.use(errorHandler);
 
