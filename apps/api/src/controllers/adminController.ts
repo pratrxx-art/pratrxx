@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { prisma } from "../index.js";
+import { db } from "../config/firebase.js";
 
 export async function adminStats(_req: Request, res: Response) {
-  const [users, links, withdrawalsPending] = await Promise.all([
-    prisma.user.count(),
-    prisma.link.count(),
-    prisma.withdrawal.count({ where: { status: "PENDING" } })
+  const [users, links, pending] = await Promise.all([
+    db.collection("users").get(),
+    db.collection("links").get(),
+    db.collection("withdrawals").where("status", "==", "PENDING").get()
   ]);
-  res.json({ users, links, withdrawalsPending });
+  res.json({ users: users.size, links: links.size, withdrawalsPending: pending.size });
 }

@@ -1,13 +1,10 @@
 import { Response } from "express";
-import { prisma } from "../index.js";
+import { db } from "../config/firebase.js";
 import { AuthRequest } from "../middleware/auth.js";
 
 export async function dashboardSummary(req: AuthRequest, res: Response) {
   const userId = req.user!.userId;
-  const [links, visits, withdrawals] = await Promise.all([
-    prisma.link.count({ where: { userId } }),
-    prisma.visit.count({ where: { link: { userId } } }),
-    prisma.withdrawal.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: 5 })
-  ]);
-  res.json({ links, visits, withdrawals });
+  const links = await db.collection("links").where("userId", "==", userId).get();
+  const withdrawals = await db.collection("withdrawals").where("userId", "==", userId).limit(5).get();
+  res.json({ links: links.size, visits: 0, withdrawals: withdrawals.docs.map((d) => ({ id: d.id, ...d.data() })) });
 }

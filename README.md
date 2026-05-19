@@ -1,54 +1,38 @@
-# Shortener Pro (Monetized URL Shortener)
+# Shortener Pro (Firebase Edition)
 
-Production-focused monorepo scaffold for a modern URL shortener and monetized link-sharing platform.
+This project now uses **Firebase strictly** for backend persistence.
 
 ## Stack
-- Next.js 15 + TypeScript + Tailwind CSS (frontend)
-- Node.js + Express + Prisma (backend)
-- PostgreSQL, Redis
-- JWT auth (access + refresh tokens)
-- Docker + Nginx ready
+- Frontend: Next.js (Vercel)
+- Backend: Express (Render)
+- Database/Auth: Firebase Firestore + Firebase Admin/Auth
 
-## Current functional scope
-- User registration/login with JWT access token and refresh endpoint
-- Authenticated link creation + listing on dashboard
-- Public short link resolve + click tracking endpoint
-- Basic admin stats and dashboard summary APIs
+## Required environment variables
+### Backend (Render)
+- `JWT_SECRET`
+- `JWT_REFRESH_SECRET`
+- `WEB_URL`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_PRIVATE_KEY`
 
-## Local run
-1. `cp .env.example .env`
-2. `npm install`
-3. `npx prisma generate`
-4. `npx prisma migrate dev --name init`
-5. `npm run dev`
+### Frontend (Vercel)
+- `NEXT_PUBLIC_API_URL`
 
-## Production deployment (recommended)
-### 1) Backend deployment (Render/Railway/Fly)
-- Deploy from repo root
-- Build command: `npm install && npm run build -w apps/api`
-- Start command: `npm run start -w apps/api`
-- Environment variables:
-  - `DATABASE_URL`
-  - `JWT_SECRET`
-  - `JWT_REFRESH_SECRET`
-  - `WEB_URL=https://<your-vercel-domain>`
-  - `REDIS_URL`
+## Deploy steps
+1. Create Firebase project and Firestore database.
+2. Create a Firebase service account and copy project ID, client email, private key.
+3. Deploy backend on Render:
+   - Build: `npm install && npm run build -w apps/api`
+   - Start: `npm run start -w apps/api`
+4. Set backend env vars listed above.
+5. Deploy frontend on Vercel with root directory `apps/web`.
+6. Set `NEXT_PUBLIC_API_URL` to Render backend URL.
+7. Update Render `WEB_URL` to your Vercel frontend URL.
 
-### 2) Frontend deployment (Vercel)
-- Import repo in Vercel
-- Root Directory: `apps/web`
-- Build command: `npm run build`
-- Install command: `npm install`
-- Environment variable:
-  - `NEXT_PUBLIC_API_URL=https://<your-backend-domain>`
-
-### 3) DNS
-- `app.yourdomain.com` -> Vercel frontend
-- `api.yourdomain.com` -> API host
-
-## Next production hardening tasks
-- Email verification + password reset workflow
-- OAuth providers (Google)
-- Anti-bot/captcha + fraud scoring
-- Payment workflows and withdrawal approvals
-- Full analytics charts and queue workers
+## API coverage
+- Auth: register/login/refresh
+- Links: create/list
+- Public: resolve/go
+- Dashboard summary
+- Admin stats
