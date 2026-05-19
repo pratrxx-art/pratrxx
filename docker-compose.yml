@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: shortener
+    ports: ["5432:5432"]
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/shortener
+      JWT_SECRET: devsecret
+      JWT_REFRESH_SECRET: devrefresh
+      WEB_URL: http://localhost:3000
+    ports: ["3000:3000", "4000:4000"]
+    depends_on: [postgres, redis]
