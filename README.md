@@ -3,7 +3,7 @@
 This project now uses **Firebase strictly** for backend persistence.
 
 ## Stack
-- Frontend: Next.js (Vercel)
+- Frontend: Next.js
 - Backend: Express (Render)
 - Database/Auth: Firebase Firestore + Firebase Admin/Auth
 
@@ -11,12 +11,12 @@ This project now uses **Firebase strictly** for backend persistence.
 ### Backend (Render)
 - `JWT_SECRET`
 - `JWT_REFRESH_SECRET`
-- `WEB_URL`
+- `WEB_URL` (your frontend URL)
 - `FIREBASE_PROJECT_ID`
 - `FIREBASE_CLIENT_EMAIL`
 - `FIREBASE_PRIVATE_KEY`
 
-### Frontend (Vercel)
+### Frontend
 - `NEXT_PUBLIC_API_URL`
 
 ## Deploy steps
@@ -26,9 +26,9 @@ This project now uses **Firebase strictly** for backend persistence.
    - Build: `npm install && npm run build -w apps/api`
    - Start: `npm run start -w apps/api`
 4. Set backend env vars listed above.
-5. Deploy frontend on Vercel with root directory `apps/web`.
-6. Set `NEXT_PUBLIC_API_URL` to Render backend URL.
-7. Update Render `WEB_URL` to your Vercel frontend URL.
+5. Deploy frontend on your preferred platform from `apps/web`.
+6. Set `NEXT_PUBLIC_API_URL` to your Render backend URL.
+7. Update Render `WEB_URL` to your deployed frontend URL.
 
 ## API coverage
 - Auth: register/login/refresh
